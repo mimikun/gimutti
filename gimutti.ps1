@@ -31,8 +31,10 @@ $fav_urls = @(
     "https://paimon.moe",
     "https://act.hoyolab.com/ys/app/interactive-map/index.html?lang=ja-jp#/map/2?shown_types=45&center=2008.50,-1084.00&zoom=-3.00"
 )
+$streaming_soft_dir = Join-Path -Path $env:ProgramFiles -ChildPath "obs-studio\bin\64bit"
 $streaming_soft = Join-Path -Path $env:ProgramFiles -ChildPath "obs-studio\bin\64bit\obs64.exe"
 $obsidian_app = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Obsidian\Obsidian.exe"
+$current_dir = pwd
 
 #--- main ---#
 $rcWindows = New-Object RECT
@@ -43,20 +45,51 @@ function Open-Url {
     Start-Process -FilePath $browser -ArgumentList "--new-window $url"
 }
 
-# Open Twitch window
+<#
+#>
+# Twitch window
 Open-Url $twitch_url
+$twitch_window = Get-Process |
+    where {$_.ProcessName -eq "vivaldi"} |
+    where {$_.MainWindowTitle.Contains("mimikun_8")}
+# TODO: サブディスプレイ左上に配置する
 
-# Open mastodon window
-#Open-Url $sns_url
+Write-Output "WIP"
 
-#Start-Process -FilePath $browser -ArgumentList "--new-window $twitch_url"
+# Mastodon window
+Open-Url $sns_url
+$sns_window = Get-Process |
+    where {$_.ProcessName -eq "vivaldi"} |
+    where {$_.MainWindowTitle.Contains("mimikun")}
+# TODO: メインディスプレイ左上に配置する
+
+Write-Output "WIP"
+
 # Open favorite urls
-#Start-Process -FilePath $browser -ArgumentList "--new-window $fav_urls"
-# Open OBS Studio
-# TODO: Fix error code
+Open-Url $fav_urls
+$fav_window = Get-Process |
+    where {$_.ProcessName -eq "vivaldi"} |
+    where {$_.MainWindowTitle.Contains("Paimon.moe")}
+# TODO: サブディスプレイ右上に配置する
 
-#Start-Process -FilePath $streaming_soft
+Write-Output "WIP"
+
+# Open OBS Studio
+# NOTE: ターミナルからOBSは起動できない
+# ref: https://github.com/obsproject/obs-studio/issues/2966
+
+cd $streaming_soft_dir
+Start-Process "obs64.exe"
+cd $current_dir
+$obs_window = Get-Process |
+    where {$_.ProcessName -eq "obs64"}
+    where {$_.MainWindowTitle.Contains("OBS")}
+
+# TODO: サブディスプレイ左下に配置する
+
+Write-Output "WIP"
+
 
 # Open Obsidian app
-# NOTE: 変なログが出てくる
-#Start-Process -FilePath $obsidian_app
+# TODO: 変なログが出てくる
+#Start-Process "obsidian://vault=mimikun"
