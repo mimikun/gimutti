@@ -47,10 +47,12 @@ function Open-Url {
 
 # Twitch window
 Open-Url $twitch_url
-$twitch_window = Get-Process |
+$twitch_window = (Get-Process |
     where {$_.ProcessName -eq "vivaldi"} |
-    where {$_.MainWindowTitle.Contains("mimikun_8")}
+    where {$_.MainWindowTitle.Contains("mimikun_8")}).MainWindowHandle
 # TODO: サブディスプレイ左上に配置する
+[Win32]::GetWindowRect($twitch_window,[ref]$rcWindow)
+[Win32]::GetClientRect($twitch_window,[ref]$rcClient)
 
 Write-Output "WIP"
 
