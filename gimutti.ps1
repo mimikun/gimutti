@@ -45,8 +45,6 @@ function Open-Url {
     Start-Process -FilePath $browser -ArgumentList "--new-window $url"
 }
 
-<#
-#>
 # Twitch window
 Open-Url $twitch_url
 $twitch_window = Get-Process |
@@ -56,6 +54,7 @@ $twitch_window = Get-Process |
 
 Write-Output "WIP"
 
+<#
 # Mastodon window
 Open-Url $sns_url
 $sns_window = Get-Process |
@@ -89,7 +88,6 @@ $obs_window = Get-Process |
 
 Write-Output "WIP"
 
-
 # Open Obsidian app
 # NOTE: PowerShellには/dev/null がないため
 # 通常のファイルにリダイレクトする形になる
@@ -97,7 +95,9 @@ Write-Output "WIP"
 Start-Process -FilePath $obsidian_app -RedirectStandardOutput dev_null
 $obsidian_window = Get-Process |
     where {$_.ProcessName -eq "obsidian"} |
-    where {$_.MainWindowTitle}
+    where {$_.MainWindowTitle.Contains("mimikun")}
+
 # TODO: サブディスプレイ右上に配置する
 
 Write-Output "WIP"
+#>
